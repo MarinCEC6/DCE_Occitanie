@@ -1,0 +1,8 @@
+{
+  "input_parquet": "C:\\data\\RESULTS_AV\\01_INTERMEDIATE\\av_dce_occitanie_crop_blocks\\combined\\blocks_features_hydric.parquet",
+  "blocks_gpkg": "C:\\data\\RESULTS_AV\\01_INTERMEDIATE\\av_dce_occitanie_crop_blocks\\combined\\blocks_raw.gpkg",
+  "departments_geojson": "C:\\data\\RESULTS_AV\\03_FIGURES\\policy_scenarios_custom_v2\\webapp\\data\\departements_pillars.geojson",
+  "output_root": "C:\\data\\RESULTS_AV\\03_FIGURES\\occitanie_blocks_explorer\\data",
+  "n_blocks": 277665,
+  "n_large_blocks": 25386
+}

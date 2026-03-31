@@ -1,0 +1,165 @@
+﻿<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Occitanie AV Blocks Explorer</title>
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="hero-card">
+          <p class="eyebrow">Prototype spatial DCE</p>
+          <h1>Occitanie AV Blocks Explorer</h1>
+          <p class="lede">
+            Visualisation exploratoire des blocs agrivoltaiques reconstruits a l'echelle regionale,
+            avec filtres par taille, culture dominante et stress hydrique.
+          </p>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Synthese</p>
+              <h2>Vue d'ensemble</h2>
+            </div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat">
+              <span>Blocs totaux</span>
+              <strong id="statTotalBlocks">-</strong>
+            </div>
+            <div class="stat">
+              <span>Blocs filtres</span>
+              <strong id="statFilteredBlocks">-</strong>
+            </div>
+            <div class="stat">
+              <span>Surface mediane</span>
+              <strong id="statMedianHa">-</strong>
+            </div>
+            <div class="stat">
+              <span>Hydric high</span>
+              <strong id="statHydricHigh">-</strong>
+            </div>
+          </div>
+          <p class="note" id="summaryNote">
+            La carte montre tous les blocs en points; les blocs de 10 ha et plus peuvent aussi etre affiches en polygones.
+          </p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Filtres</p>
+              <h2>Configuration</h2>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="departmentSelect">Departement</label>
+            <select id="departmentSelect">
+              <option value="all">Toute l'Occitanie</option>
+            </select>
+          </div>
+
+          <fieldset class="check-group" id="sizeGroup">
+            <legend>Classes de taille</legend>
+            <label><input type="checkbox" value="0_5" checked /> 0-5 ha</label>
+            <label><input type="checkbox" value="5_10" checked /> 5-10 ha</label>
+            <label><input type="checkbox" value="10_15" checked /> 10-15 ha</label>
+            <label><input type="checkbox" value="15_plus" checked /> 15+ ha</label>
+          </fieldset>
+
+          <fieldset class="check-group" id="cropGroup">
+            <legend>Culture dominante</legend>
+            <label><input type="checkbox" value="grandes_cultures" checked /> Grandes cultures</label>
+            <label><input type="checkbox" value="perennes" checked /> Perennes</label>
+            <label><input type="checkbox" value="prairie_elevage" checked /> Prairie / elevage</label>
+            <label><input type="checkbox" value="mixte" checked /> Mixte</label>
+            <label><input type="checkbox" value="autre" checked /> Autre</label>
+          </fieldset>
+
+          <fieldset class="check-group" id="hydricGroup">
+            <legend>Stress hydrique</legend>
+            <label><input type="checkbox" value="low" checked /> Low</label>
+            <label><input type="checkbox" value="medium" checked /> Medium</label>
+            <label><input type="checkbox" value="high" checked /> High</label>
+          </fieldset>
+
+          <div class="toggle-list">
+            <label><input type="checkbox" id="toggleLargePolygons" checked /> Afficher les polygones 10 ha+</label>
+            <label><input type="checkbox" id="toggleNearOnly" /> Limiter l'affichage au near du point repondant</label>
+          </div>
+
+          <div class="control-group">
+            <label for="colorModeSelect">Couleur de la carte</label>
+            <select id="colorModeSelect">
+              <option value="crop">Culture dominante</option>
+              <option value="hydric">Stress hydrique</option>
+              <option value="size">Classe de taille</option>
+            </select>
+          </div>
+
+          <div class="button-row">
+            <button id="clearFiltersBtn" type="button">Reinitialiser les filtres</button>
+            <button id="fitOccitanieBtn" type="button">Recentrer</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Point repondant</p>
+              <h2>Test de matching</h2>
+            </div>
+          </div>
+          <p class="note">
+            Clique sur la carte pour poser un domicile test. Le cercle de 10 km permet de visualiser les blocs near.
+          </p>
+          <div class="button-row">
+            <button id="setRespondentBtn" type="button">Poser un point</button>
+            <button id="clearRespondentBtn" type="button">Effacer</button>
+          </div>
+          <div class="stat-grid stat-grid--compact">
+            <div class="stat">
+              <span>Blocs near</span>
+              <strong id="statNearBlocks">-</strong>
+            </div>
+            <div class="stat">
+              <span>Near high</span>
+              <strong id="statNearHigh">-</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Bloc selectionne</p>
+              <h2>Fiche bloc</h2>
+            </div>
+          </div>
+          <div id="blockCard" class="block-card empty">
+            Clique un bloc pour afficher sa fiche.
+          </div>
+        </section>
+      </aside>
+
+      <main class="map-shell">
+        <div class="map-head">
+          <div>
+            <p class="eyebrow">Carte</p>
+            <h2>Base Occitanie</h2>
+          </div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div id="map"></div>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
